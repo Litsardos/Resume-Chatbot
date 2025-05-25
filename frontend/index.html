@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Chatbot</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #30668d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+
+    .container {
+      background: transparent;
+      padding: 0;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(50,71,91,0.10);
+      width: 95%;
+      max-width: 720px;
+      min-height: 820px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(90deg, #32475b 0%, #3498db 100%);
+      color: #fff;
+      padding: 32px 0 18px 0;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      margin-bottom: 0;
+    }
+    .chat-header h1 {
+      font-size: 2.1rem;
+      margin: 0 0 6px 0;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .chat-header p {
+      font-size: 1.08rem;
+      margin: 0;
+      opacity: 0.92;
+      font-weight: 400;
+    }
+
+    .chat-messages {
+      background: #fff;
+      min-height: 220px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding: 24px 18px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+    .message {
+      display: inline-block;
+      padding: 13px 18px;
+      border-radius: 18px;
+      margin-bottom: 0;
+      font-size: 1.04rem;
+      max-width: 85%;
+      box-shadow: 0 2px 8px rgba(50,71,91,0.07);
+      background: #fff;
+      color: #333;
+      text-align: left;
+    }
+    .message.bot {
+      background: #e3ecf7;
+      color: #32475b;
+      align-self: flex-start;
+      box-shadow: 0 2px 8px rgba(50,71,91,0.10);
+    }
+    .message.user {
+      background: #3498db;
+      color: #fff;
+      align-self: flex-end;
+      box-shadow: 0 2px 8px rgba(50,71,91,0.10);
+    }
+
+    .chat-input {
+      display: flex;
+      align-items: center;
+      background: #e3ecf7;
+      padding: 18px 18px 18px 18px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      border-top: 1px solid #b0bec5;
+      gap: 10px;
+    }
+    .chat-input input[type="text"] {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 22px;
+      border: 1.5px solid #90a4ae;
+      font-size: 1.08rem;
+      outline: none;
+      background: #fff;
+      transition: border 0.2s;
+      box-shadow: 0 1px 4px rgba(50,71,91,0.04);
+    }
+    .chat-input input[type="text"]:focus {
+      border: 1.5px solid #3498db;
+      background: #fff;
+    }
+    .chat-input button {
+      padding: 12px 28px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 22px;
+      font-size: 1.08rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(50,71,91,0.10);
+    }
+    .chat-input button:hover {
+      background: #1976d2;
+      box-shadow: 0 4px 16px rgba(50,71,91,0.13);
+    }
+
+    .suggested-questions {
+      margin-top: 32px;
+      overflow: hidden;
+      background: #e3ecf7;
+      border-radius: 18px;
+      padding: 18px 10px 10px 10px;
+      box-shadow: 0 6px 24px rgba(50,71,91,0.10);
+      border: 2px solid #90a4ae;
+      scrollbar-width: thin;
+      scrollbar-color: #3498db #e3ecf7;
+    }
+    .suggested-scroll {
+      max-height: 120px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .suggested-questions::-webkit-scrollbar {
+      width: 10px;
+      border-radius: 12px;
+      background: #e3ecf7;
+    }
+    .suggested-questions::-webkit-scrollbar-thumb {
+      background: #3498db;
+      border-radius: 12px;
+      min-height: 40px;
+      border: 2px solid #e3ecf7;
+    }
+    .suggested-questions::-webkit-scrollbar-corner {
+      background: #e3ecf7;
+    }
+    .suggested-questions h3 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(90deg, #32475b 0%, #3498db 100%);
+      display: inline-block;
+      padding: 12px 32px;
+      border-radius: 28px;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(50, 71, 91, 0.13);
+      border: none;
+    }
+    .question-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: flex-start;
+      max-height: none;
+      overflow-y: visible;
+    }
+    .question-chips button {
+      font-size: 0.95rem;
+      padding: 6px 14px;
+      margin-top: 0;
+      border-radius: 16px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 1px 2px rgba(50,71,91,0.04);
+    }
+    .question-chips button:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="chat-container">
+      <div class="chat-header">
+        <h1>Resume Chatbot</h1>
+        <p>Ask me anything about me!</p>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message bot">
+          Hello! I'm your resume chatbot. Feel free to ask me anything about my experience, skills, education, and more.
+        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Feel free to ask me anything!">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+    <div class="suggested-questions">
+      <h3>Suggested Questions:</h3>
+      <div class="suggested-scroll">
+        <div class="question-chips">
+          <button onclick="askQuestion('Tell me about yourself')">Tell me about yourself</button>
+          <button onclick="askQuestion('What projects have you worked on?')">What projects have you worked on?</button>
+          <button onclick="askQuestion('What are your skills?')">What are your skills?</button>
+          <button onclick="askQuestion('Where do you study?')">Where do you study?</button>
+          <button onclick="askQuestion('What are your hobbies?')">What are your hobbies?</button>
+          <button onclick="askQuestion('How old are you?')">How old are you?</button>
+          <button onclick="askQuestion('What languages do you speak?')">What languages do you speak?</button>
+          <button onclick="askQuestion('Do you have any certifications?')">Do you have any certifications?</button>
+          <button onclick="askQuestion('What is your work experience?')">What is your work experience?</button>
+          <button onclick="askQuestion('What was your previous job?')">What was your previous job?</button>
+          <button onclick="askQuestion('What is your current job?')">What is your current job?</button>
+          <button onclick="askQuestion('What are your strengths?')">What are your strengths?</button>
+          <button onclick="askQuestion('What are your weaknesses?')">What are your weaknesses?</button>
+          <button onclick="askQuestion('What is your dream job?')">What is your dream job?</button>
+          <button onclick="askQuestion('Why should we hire you?')">Why should we hire you?</button>
+          <button onclick="askQuestion('What is your favorite technology?')">What is your favorite technology?</button>
+          <button onclick="askQuestion('Are you willing to relocate?')">Are you willing to relocate?</button>
+          <button onclick="askQuestion('What is your salary expectation?')">What is your salary expectation?</button>
+          <button onclick="askQuestion('Do you have leadership experience?')">Do you have leadership experience?</button>
+          <button onclick="askQuestion('What is your biggest achievement?')">What is your biggest achievement?</button>
+          <button onclick="askQuestion('What motivates you?')">What motivates you?</button>
+          <button onclick="askQuestion('How do you handle stress?')">How do you handle stress?</button>
+          <button onclick="askQuestion('What are your future goals?')">What are your future goals?</button>
+          <button onclick="askQuestion('Are you open to remote work?')">Are you open to remote work?</button>
+          <button onclick="askQuestion('What is your availability?')">What is your availability?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
